@@ -1,15 +1,11 @@
 const Octokat = require('octokat');
 const octo = new Octokat();
 
-const Ajv = require('ajv');
-const ajv = new Ajv();
-ajv.addMetaSchema(require('ajv/lib/refs/json-schema-draft-04.json'));
-
 const fs = require('fs');
 const { promisify } = require('util');
 
 const publishingRepositories = [
-  "adamvoss/Macchina_Arduino_Boards"
+  "macchina-dev/arduino-boards-sam"
 ]
 
 function createRepo(qualifiedRepoName) {
@@ -17,26 +13,41 @@ function createRepo(qualifiedRepoName) {
   return octo.repos(pieces[0], pieces[1]);
 }
 
+function getReleases(repository) {
+  const repo = createRepo(repository);
+  return repo.releases.fetchAll();
+}
+
+async function getPlatform(release) {
+  const platform = release.assets.filter(a => a.name === 'platform.json')[0]
+
+  return JSON.parse(await platform.browserDownload.fetch());
+}
+
 async function main() {
 
-  // We validate against a schema as a security measure against injection attacks  
-  const schema = JSON.parse(await promisify(fs.readFile)('release.schema.json', 'utf8'));
+  // NB. this is Flat-map
+  releaseArrays = await Promise.all(publishingRepositories.map(getReleases))
+  const releases = [].concat.apply([], releaseArrays);
 
-  for (repository of publishingRepositories) {
-    const repo = createRepo(repository);
-    const releases = await repo.releases.fetchAll();
-
-    for (release of releases) {
-      const releaseInfo = JSON.parse(release.body)
-
-      const isValid = ajv.validate(schema, releaseInfo);
-      if (!isValid) {
-        throw new Error(`Not a valid release. ${ajv.errorsText()}`);
+  const index = {
+    packages: [
+      {
+        name: "macchina",
+        maintainer: "Macchina",
+        websiteURL: "https://www.macchina.cc",
+        email: "info@macchina.cc",
+        help: {
+          online: "https://forum.macchina.cc/"
+        },
+        platforms: await Promise.all(releases.map(getPlatform)),
+        tools: []
       }
+    ]
 
-
-    }
   }
+
+  return JSON.stringify(index, undefined, 2);
 }
 
 if (require.main === module) {
@@ -46,48 +57,4 @@ if (require.main === module) {
       console.error(error);
       process.exit(2);
     });
-}
-
-const index = {
-  packages: [
-    {
-      name: "macchina",
-      maintainer: "Macchina",
-      websiteURL: "https://www.macchina.cc",
-      email: "info@macchina.cc",
-      help: {
-        online: "https://forum.macchina.cc/"
-      },
-      platforms: [
-        {
-          name: "Macchina SAM Boards (dependency: Arduino SAM Boards)",
-          architecture: "sam",
-          version: "0.0.0",
-          category: "Contributed",
-          url: "https://github.com/adamvoss/Macchina_Arduino_Boards/releases/download/0.0.0/macchina-sam-0.0.0.tar.gz",
-          archiveFileName: "macchina-sam-0.0.0.tar.gz",
-          checksum: "SHA-256:0f5a4f5a08400cfd0fd00fd2f88db8bbfed5b879e3c9e6e93dbb08c23754e198",
-          size: "52586",
-          boards: [
-            {
-              name: "Macchina M2"
-            }
-          ],
-          toolsDependencies: [
-            {
-              packager: "arduino",
-              name: "arm-none-eabi-gcc",
-              version: "4.8.3-2014q1"
-            },
-            {
-              packager: "arduino",
-              name: "bossac",
-              version: "1.6.1-arduino"
-            }
-          ]
-        }
-      ],
-      tools: []
-    }
-  ]
 }
