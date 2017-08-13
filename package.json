@@ -1,0 +1,16 @@
+{
+  "name": "package-index-generator",
+  "version": "0.0.1",
+  "description": "Generates an Arduino package_*_index.json for the Board Manager from GitHub releases",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "author": "Adam Voss",
+  "license": "MIT",
+  "dependencies": {
+    "ajv": "^5.2.2",
+    "octokat": "^0.9.2"
+  }
+}
