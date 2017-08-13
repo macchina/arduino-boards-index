@@ -1,8 +1,10 @@
 const Octokat = require('octokat');
-const octo = new Octokat();
+const token = process.env['GITHUB_TOKEN'];
+const octo = token ? new Octokat({ token }) : new Octokat();
 
-const fs = require('fs');
 const { promisify } = require('util');
+
+var rp = require('request-promise-native');
 
 const publishingRepositories = [
   "macchina-dev/arduino-boards-sam"
@@ -21,7 +23,7 @@ function getReleases(repository) {
 async function getPlatform(release) {
   const platform = release.assets.filter(a => a.name === 'platform.json')[0]
 
-  return JSON.parse(await platform.browserDownload.fetch());
+  return JSON.parse(await rp(platform.browserDownloadUrl));
 }
 
 async function main() {
