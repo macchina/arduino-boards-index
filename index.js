@@ -7,7 +7,7 @@ const { promisify } = require('util');
 var rp = require('request-promise-native');
 
 const publishingRepositories = [
-  "macchina-dev/arduino-boards-sam"
+  "macchina/arduino-boards-sam"
 ]
 
 function createRepo(qualifiedRepoName) {
@@ -37,7 +37,7 @@ async function main() {
       {
         name: "macchina",
         maintainer: "Macchina",
-        websiteURL: "https://www.macchina.cc",
+        websiteURL: "https://github.com/macchina/arduino-boards-index",
         email: "info@macchina.cc",
         help: {
           online: "https://forum.macchina.cc/"
