@@ -1,0 +1,30 @@
+{
+  "name": "Macchina SAM Boards (Install \"Arduino SAM Boards\" first)",
+  "architecture": "sam",
+  "version": "0.3.5",
+  "category": "Contributed",
+  "url": "https://github.com/macchina/arduino-boards-sam/releases/download/0.3.5/macchina-sam-0.3.5.tar.gz",
+  "archiveFileName": "macchina-sam-0.3.5.tar.gz",
+  "checksum": "SHA-256:5bdce87d931d7305565d212a8726007c11f90018f2f470ce6194f3a9bc7f6ff6",
+  "size": "295511",
+  "boards": [
+    {
+      "name": "Macchina M2"
+    },
+    {
+      "name": "Macchina M2 (Beta)"
+    }
+  ],
+  "toolsDependencies": [
+    {
+      "packager": "arduino",
+      "name": "arm-none-eabi-gcc",
+      "version": "4.8.3-2014q1"
+    },
+    {
+      "packager": "arduino",
+      "name": "bossac",
+      "version": "1.6.1-arduino"
+    }
+  ]
+}
