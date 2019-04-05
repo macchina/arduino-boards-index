@@ -29,8 +29,7 @@ async function getPlatform(release) {
 async function main() {
 
   // NB. this is Flat-map
-  // releaseArrays = await Promise.all(publishingRepositories.map(getReleases))
-  releaseArrays = await Promise.all(getReleases("macchina/arduino-boards-sam"))
+  releaseArrays = await Promise.all(publishingRepositories.map(getReleases))
   const releases = [].concat.apply([], releaseArrays);
 
   const index = {
