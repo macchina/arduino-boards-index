@@ -23,7 +23,7 @@ function getReleases(repository) {
 async function getPlatform(release) {
   const platform = release.assets.filter(a => a.name === 'platform.json')[0]
 
-  return JSON.parse(await rp(platform.browserDownloadUrl));
+  return JSON.parse(await rp(platform.url));
 }
 
 async function main() {
