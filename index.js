@@ -21,11 +21,12 @@ function getReleases(repository) {
 }
 
 async function getPlatform(release) {
-  console.log("release:" + release)
   const platform = release.assets.filter(a => a.name === 'platform.json')[0]
-  console.log("platform: " + platform)
-  console.log("platform.url: " + platform.url)
-  return JSON.parse(await rp(platform.url));
+  // skip this release if platform.json does not exist
+  if(platform == null) {
+    return;
+  }
+  return JSON.parse(await rp(platform.browserDownloadUrl));
 }
 
 async function main() {
