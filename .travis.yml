@@ -4,7 +4,7 @@ sudo: false
 
 before_deploy:
   - mkdir _site
-  - node index.js
+  - node index.js > _site/package_macchina_index.json
 
 deploy:
   provider: pages
