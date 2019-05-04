@@ -21,6 +21,7 @@ function getReleases(repository) {
 }
 
 async function getPlatform(release) {
+  console.log("release:" + release)
   const platform = release.assets.filter(a => a.name === 'platform.json')[0]
 
   return JSON.parse(await rp(platform.browserDownloadUrl));
@@ -30,7 +31,9 @@ async function main() {
 
   // NB. this is Flat-map
   releaseArrays = await Promise.all(publishingRepositories.map(getReleases))
+  console.log("releaseArrays: " + releaseArrays)
   const releases = [].concat.apply([], releaseArrays);
+  console.log("releases: " + releases)
 
   const index = {
     packages: [
