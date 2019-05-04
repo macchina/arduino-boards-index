@@ -33,9 +33,7 @@ async function main() {
 
   // NB. this is Flat-map
   releaseArrays = await Promise.all(publishingRepositories.map(getReleases))
-  console.log("releaseArrays: " + releaseArrays)
   const releases = [].concat.apply([], releaseArrays);
-  console.log("releases: " + releases)
 
   const index = {
     packages: [
